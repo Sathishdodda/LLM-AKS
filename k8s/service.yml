@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: simple-web-app-service
+  name: sample-html-app
 spec:
   selector:
-    app: simple-web-app
+    app: sample-html-app
   ports:
     - protocol: TCP
       port: 80
