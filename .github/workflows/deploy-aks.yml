@@ -56,3 +56,8 @@ jobs:
         run: |
           echo "::set-output name=RESOURCE_GROUP::$(jq -r '.resource_group_name.value' output.json)"
           echo "::set-output name=AKS_CLUSTER::$(jq -r '.aks_cluster_name.value' output.json)"
+
+      - name: Save Outputs
+        run: |
+          echo "RESOURCE_GROUP=$(jq -r '.resource_group_name.value' output.json)" >> $GITHUB_ENV
+          echo "AKS_CLUSTER=$(jq -r '.aks_cluster_name.value' output.json)" >> $GITHUB_ENV
