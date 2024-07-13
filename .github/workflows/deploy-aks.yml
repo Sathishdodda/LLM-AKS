@@ -3,7 +3,7 @@ name: Deploy AKS Cluster
 on:
   push:
     branches:
-      - trigger
+      - main
 
 jobs:
   terraform:
