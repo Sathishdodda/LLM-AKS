@@ -3,7 +3,7 @@ name: Deploy AKS Cluster and Application
 on:
   push:
     branches:
-      - main
+      - trigger
 
 jobs:
   deploy:
