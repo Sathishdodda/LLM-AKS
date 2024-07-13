@@ -3,7 +3,7 @@ name: Deploy AKS Cluster and Application
 on:
   push:
     branches:
-      - main
+      - tiggrer
 
 jobs:
   deploy:
@@ -63,8 +63,8 @@ jobs:
         run: |
           az aks install-cli
           az aks get-credentials --overwrite-existing \
-            --name ${{ env.AKS_CLUSTER }} \
-            --resource-group ${{ env.RESOURCE_GROUP }}
+            --name aks-final-07 \
+            --resource-group aks-final-7-rg
 
       - name: Verify kubectl installation
         run: kubectl version --client
