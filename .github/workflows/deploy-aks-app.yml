@@ -60,12 +60,12 @@ jobs:
       - name: Install Kubectl
         run: |
           az aks install-cli
-          az aks get-credentials --resource-group ${{ steps.read-output.outputs.RESOURCE_GROUP }} --name ${{ steps.read-output.outputs.AKS_CLUSTER }}
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          az aks get-credentials --overwrite-existing \
+            --name ${{ steps.read-output.outputs.AKS_CLUSTER }} \
+            --resource-group ${{ steps.read-output.outputs.RESOURCE_GROUP }}
+
+      - name: Verify kubectl installation
+        run: kubectl version --client
 
       - name: Deploy Sample Application
         run: |
