@@ -1,18 +1,12 @@
-# Use the official Node.js image
-FROM node:14
-
-# Create and change to the app directory
-WORKDIR /usr/src/app
-
-# Copy the application files
-COPY package*.json ./
-COPY app.js ./
-
-# Install the dependencies
-RUN npm install
-
-# Expose the application port
-EXPOSE 3000
-
-# Start the application
-CMD ["npm", "start"]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample HTML App</title>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>This is a sample HTML application deployed on AKS.</p>
+</body>
+</html>
