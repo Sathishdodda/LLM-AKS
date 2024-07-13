@@ -3,7 +3,7 @@ name: Deploy AKS Cluster and Application
 on:
   push:
     branches:
-      - main
+      - trigger
 
 jobs:
   deploy:
@@ -42,29 +42,35 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
-      - name: Post Apply Output
-        id: output
-        run: terraform output -json > output.json
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      # - name: Post Apply Output
+      #   id: output
+      #   run: terraform output -json > output.json
+      #   env:
+      #     ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      #     ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      #     ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      #     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
-      - name: Read Terraform Outputs
-        id: read-output
-        run: |
-          echo "RESOURCE_GROUP=$(jq -r '.resource_group_name.value' output.json)"
-          echo "AKS_CLUSTER=$(jq -r '.aks_cluster_name.value' output.json)"
-          echo "RESOURCE_GROUP=$(jq -r '.resource_group_name.value' output.json)" >> $GITHUB_ENV
-          echo "AKS_CLUSTER=$(jq -r '.aks_cluster_name.value' output.json)" >> $GITHUB_ENV
+      # - name: Read Terraform Outputs
+      #   id: read-output
+      #   run: |
+      #     echo "::set-output name=RESOURCE_GROUP::$(jq -r '.resource_group_name.value' output.json)"
+      #     echo "::set-output name=AKS_CLUSTER::$(jq -r '.aks_cluster_name.value' output.json)"
 
       - name: Install Kubectl
         run: |
           az aks install-cli
+
+      - name: Configure Kubectl
+        run: |
+          az login --service-principal \
+            --username "${{ secrets.ARM_CLIENT_ID }}" \
+            --password "${{ secrets.ARM_CLIENT_SECRET }}" \
+            --tenant "${{ secrets.ARM_TENANT_ID }}"
+
           az aks get-credentials --overwrite-existing \
-            --name aks-final-08 \
-            --resource-group aks-final-8-rg
+            --name aks-final-10 \
+            --resource-group aks-final-10-rg
 
       - name: Verify kubectl installation
         run: kubectl version --client
