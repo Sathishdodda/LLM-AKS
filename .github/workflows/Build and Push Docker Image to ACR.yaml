@@ -32,7 +32,7 @@ jobs:
       - name: Build and Push Docker Image
         env:
           REGISTRY: ${{ secrets.ACR_NAME }}.azurecr.io
-          IMAGE_NAME: simple-web-app-html
+          IMAGE_NAME: sample-html-app
         run: |
           az acr login --name ${{ secrets.ACR_NAME }}
           docker build -t $REGISTRY/$IMAGE_NAME:latest .
