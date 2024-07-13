@@ -12,7 +12,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "aks-final-rg"
+  name     = "aks-final-5-rg"
   location = "eastus"
   tags = {
     environment = "dev"
