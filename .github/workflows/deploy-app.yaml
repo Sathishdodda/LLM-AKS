@@ -30,7 +30,11 @@ jobs:
       - name: Install Kubectl
         run: |
           az aks install-cli
-          az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER }}
+          echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
+          echo "AKS_CLUSTER=$AKS_CLUSTER" >> $GITHUB_ENV
+          az aks get-credentials --overwrite-existing \
+            --name $AKS_CLUSTER \
+            --resource-group $RESOURCE_GROUP
 
       - name: Deploy Application
         run: |
