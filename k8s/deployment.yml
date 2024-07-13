@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-web-app
+  name: sample-html-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: simple-web-app
+      app: sample-html-app
   template:
     metadata:
       labels:
-        app: simple-web-app
+        app: sample-html-app
     spec:
       containers:
-      - name: simple-web-app
-        image: ${{ secrets.ACR_NAME }}.azurecr.io/simple-web-app:latest
+      - name: sample-html-app
+        image: <your-acr-name>.azurecr.io/sample-html-app:v1
         ports:
         - containerPort: 80
