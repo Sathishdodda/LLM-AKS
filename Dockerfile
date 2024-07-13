@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample HTML App</title>
-</head>
-<body>
-    <h1>Hello, World!</h1>
-    <p>This is a sample HTML application deployed on AKS.</p>
-</body>
-</html>
+# Use nginx base image
+FROM nginx:alpine
+
+# Copy the HTML file into the nginx web server directory
+COPY index.html /usr/share/nginx/html/
+
+# Expose port 80
+EXPOSE 80
+
+# Command to start nginx when container starts
+CMD ["nginx", "-g", "daemon off;"]
