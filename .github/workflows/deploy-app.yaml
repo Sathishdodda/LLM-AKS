@@ -7,13 +7,14 @@ on:
       - completed
 
 jobs:
-  deploy:
+  deploy-app:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Set up Azure CLI with service principal credentials
       - name: Set up Azure CLI
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -27,16 +28,25 @@ jobs:
             --tenant "${ARM_TENANT_ID}"
           az account set --subscription "${ARM_SUBSCRIPTION_ID}"
 
-      - name: Install Kubectl
+      # Install kubectl and kubelogin
+      - name: Install Kubectl and Kubelogin
         run: |
           az aks install-cli
-          echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
-          echo "AKS_CLUSTER=$AKS_CLUSTER" >> $GITHUB_ENV
-          az aks get-credentials --overwrite-existing \
-            --name $AKS_CLUSTER \
-            --resource-group $RESOURCE_GROUP
+          kubectl version --client
+          kubelogin version
 
+      # Retrieve AKS credentials using saved outputs
+      - name: Retrieve AKS Credentials
+        run: |
+          echo "RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}" >> $GITHUB_ENV
+          echo "AKS_CLUSTER=${{ env.AKS_CLUSTER }}" >> $GITHUB_ENV
+          az aks get-credentials --overwrite-existing \
+            --name "${{ env.AKS_CLUSTER }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}"
+
+      # Deploy application
       - name: Deploy Application
         run: |
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
+
