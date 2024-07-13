@@ -23,6 +23,9 @@ jobs:
           REGISTRY: ${{ secrets.ACR_NAME }}.azurecr.io
           IMAGE_NAME: simple-web-app
         run: |
+          echo "Logging into ACR..."
           az acr login --name ${{ secrets.ACR_NAME }}
+          echo "Building Docker image..."
           docker build -t $REGISTRY/$IMAGE_NAME:latest .
+          echo "Pushing Docker image to ACR..."
           docker push $REGISTRY/$IMAGE_NAME:latest
