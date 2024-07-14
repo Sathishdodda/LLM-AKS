@@ -28,25 +28,48 @@ jobs:
             --tenant "${ARM_TENANT_ID}"
           az account set --subscription "${ARM_SUBSCRIPTION_ID}"
 
-      # Install kubectl and kubelogin
-      - name: Install Kubectl and Kubelogin
-        run: |
-          az aks install-cli
-          kubectl version --client
+      # # Install kubectl and kubelogin
+      # - name: Install Kubectl and Kubelogin
+      #   run: |
+      #     az aks install-cli
+      #     kubectl version --client
     
 
-      # Retrieve AKS credentials using saved outputs
-      - name: Retrieve AKS Credentials
+      # # Retrieve AKS credentials using saved outputs
+      # - name: Retrieve AKS Credentials
+      #   run: |
+      #     echo "RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}" >> $GITHUB_ENV
+      #     echo "AKS_CLUSTER=${{ env.AKS_CLUSTER }}" >> $GITHUB_ENV
+      #     az aks get-credentials --overwrite-existing \
+      #       --name "${{ env.AKS_CLUSTER }}" \
+      #       --resource-group "${{ env.RESOURCE_GROUP }}"
+
+      # # Deploy application
+      # - name: Deploy Application
+      #   run: |
+      #     kubectl apply -f k8s/deployment.yml
+      #     kubectl apply -f k8s/service.yml
+
+
+      - name: Install Kubectl
         run: |
-          echo "RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}" >> $GITHUB_ENV
-          echo "AKS_CLUSTER=${{ env.AKS_CLUSTER }}" >> $GITHUB_ENV
+          az aks install-cli
+
+      - name: Configure Kubectl
+        run: |
+          az login --service-principal \
+            --username "${{ secrets.ARM_CLIENT_ID }}" \
+            --password "${{ secrets.ARM_CLIENT_SECRET }}" \
+            --tenant "${{ secrets.ARM_TENANT_ID }}"
+
           az aks get-credentials --overwrite-existing \
             --name "${{ env.AKS_CLUSTER }}" \
             --resource-group "${{ env.RESOURCE_GROUP }}"
 
-      # Deploy application
-      - name: Deploy Application
+      - name: Verify kubectl installation
+        run: kubectl version --client
+
+      - name: Deploy Sample Application
         run: |
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
-
