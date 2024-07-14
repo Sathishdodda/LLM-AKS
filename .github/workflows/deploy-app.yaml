@@ -1,3 +1,85 @@
+# name: Deploy Application to AKS
+
+# on:
+#   workflow_run:
+#     workflows: ["Deploy AKS Cluster"]
+#     types:
+#       - completed
+
+# jobs:
+#   deploy-app:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       # Set up Azure CLI with service principal credentials
+#       - name: Set up Azure CLI
+#         env:
+#           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+#           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+#           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+#           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+#         run: |
+#           az login --service-principal \
+#             --username "${ARM_CLIENT_ID}" \
+#             --password "${ARM_CLIENT_SECRET}" \
+#             --tenant "${ARM_TENANT_ID}"
+#           az account set --subscription "${ARM_SUBSCRIPTION_ID}"
+
+#       # # Install kubectl and kubelogin
+#       # - name: Install Kubectl and Kubelogin
+#       #   run: |
+#       #     az aks install-cli
+#       #     kubectl version --client
+    
+
+#       # # Retrieve AKS credentials using saved outputs
+#       # - name: Retrieve AKS Credentials
+#       #   run: |
+#       #     echo "RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}" >> $GITHUB_ENV
+#       #     echo "AKS_CLUSTER=${{ env.AKS_CLUSTER }}" >> $GITHUB_ENV
+#       #     az aks get-credentials --overwrite-existing \
+#       #       --name "${{ env.AKS_CLUSTER }}" \
+#       #       --resource-group "${{ env.RESOURCE_GROUP }}"
+
+#       # # Deploy application
+#       # - name: Deploy Application
+#       #   run: |
+#       #     kubectl apply -f k8s/deployment.yml
+#       #     kubectl apply -f k8s/service.yml
+
+
+#       - name: Install Kubectl
+#         run: |
+#           az aks install-cli
+
+#       - name: Configure Kubectl
+#         run: |
+#           az login --service-principal \
+#             --username "${{ secrets.ARM_CLIENT_ID }}" \
+#             --password "${{ secrets.ARM_CLIENT_SECRET }}" \
+#             --tenant "${{ secrets.ARM_TENANT_ID }}"
+#         env:
+#             AZURE_API_VERSION: "2024-03-01" 
+#           run: |
+#             echo "RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}" >> $GITHUB_ENV
+#             echo "AKS_CLUSTER=${{ env.AKS_CLUSTER }}" >> $GITHUB_ENV
+#             az aks get-credentials --overwrite-existing \
+#             --name "${{ env.AKS_CLUSTER }}" \
+#             --resource-group "${{ env.RESOURCE_GROUP }}" \
+#             --api-version "2024-03-01
+
+#       - name: Verify kubectl installation
+#         run: kubectl version --client
+
+#       - name: Deploy Sample Application
+#         run: |
+#           kubectl apply -f k8s/deployment.yml
+#           kubectl apply -f k8s/service.yml
+
+
 name: Deploy Application to AKS
 
 on:
@@ -21,6 +103,7 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          AZURE_API_VERSION: "2024-03-01"  # Setting the API version explicitly
         run: |
           az login --service-principal \
             --username "${ARM_CLIENT_ID}" \
@@ -28,49 +111,26 @@ jobs:
             --tenant "${ARM_TENANT_ID}"
           az account set --subscription "${ARM_SUBSCRIPTION_ID}"
 
-      # # Install kubectl and kubelogin
-      # - name: Install Kubectl and Kubelogin
-      #   run: |
-      #     az aks install-cli
-      #     kubectl version --client
-    
-
-      # # Retrieve AKS credentials using saved outputs
-      # - name: Retrieve AKS Credentials
-      #   run: |
-      #     echo "RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}" >> $GITHUB_ENV
-      #     echo "AKS_CLUSTER=${{ env.AKS_CLUSTER }}" >> $GITHUB_ENV
-      #     az aks get-credentials --overwrite-existing \
-      #       --name "${{ env.AKS_CLUSTER }}" \
-      #       --resource-group "${{ env.RESOURCE_GROUP }}"
-
-      # # Deploy application
-      # - name: Deploy Application
-      #   run: |
-      #     kubectl apply -f k8s/deployment.yml
-      #     kubectl apply -f k8s/service.yml
-
-
-      - name: Install Kubectl
+      # Install kubectl and kubelogin
+      - name: Install Kubectl and Kubelogin
         run: |
           az aks install-cli
 
-      - name: Configure Kubectl
+      # Retrieve AKS credentials using saved outputs
+      - name: Retrieve AKS Credentials
+        env:
+          AZURE_API_VERSION: "2024-03-01"  # Ensuring the environment variable is set
         run: |
-          az login --service-principal \
-            --username "${{ secrets.ARM_CLIENT_ID }}" \
-            --password "${{ secrets.ARM_CLIENT_SECRET }}" \
-            --tenant "${{ secrets.ARM_TENANT_ID }}"
-
+          echo "RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}" >> $GITHUB_ENV
+          echo "AKS_CLUSTER=${{ env.AKS_CLUSTER }}" >> $GITHUB_ENV
           az aks get-credentials --overwrite-existing \
             --name "${{ env.AKS_CLUSTER }}" \
-            --resource-group "${{ env.RESOURCE_GROUP }}"
-             --api-version "2024-03-01"
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --api-version "2024-03-01"
 
-      - name: Verify kubectl installation
-        run: kubectl version --client
-
-      - name: Deploy Sample Application
+      # Deploy application
+      - name: Deploy Application
         run: |
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
+
