@@ -126,7 +126,7 @@ jobs:
           az aks get-credentials --overwrite-existing \
             --name "${{ env.AKS_CLUSTER }}" \
             --resource-group "${{ env.RESOURCE_GROUP }}" \
-            --api-version "2024-03-01"
+      # --api-version "2024-03-01"
 
       # Deploy application
       - name: Deploy Application
