@@ -33,7 +33,7 @@ jobs:
         run: |
           az aks install-cli
           kubectl version --client
-          kubelogin version
+    
 
       # Retrieve AKS credentials using saved outputs
       - name: Retrieve AKS Credentials
