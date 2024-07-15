@@ -3,10 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample HTML App</title>
+    <title>Generative AI with Native Cloud Labs</title>
+    <meta name="description" content="This is a sample HTML application demonstrating the capabilities of Generative AI with Native Cloud Labs, deployed on AKS.">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        p {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <p>This is a sample HTML application deployed on AKS.</p>
+    <div class="container">
+        <h1>Generative AI with Native Cloud Labs</h1>
+        <p>This is a sample HTML application demonstrating the capabilities of Generative AI with Native Cloud Labs, deployed on AKS.</p>
+        <button class="btn" onclick="alert('Azure OpenAI Intelligence Demonstrated!')">Click Me</button>
+    </div>
 </body>
 </html>
