@@ -1,19 +1,21 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask01
+  name: sample-html-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flask01
+      app: sample-html-app
   template:
     metadata:
       labels:
-        app: flask01
+        app: sample-html-app
     spec:
       containers:
-      - name: flask01
-        image: <your-acr-name>.azurecr.io/flask01:latest
-        ports:
-        - containerPort: 80
+        - name: sample-html-app
+          image: mygenaicodeacr.azurecr.io/sample-html-app:v1
+          ports:
+            - containerPort: 80
+
