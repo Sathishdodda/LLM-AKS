@@ -43,6 +43,51 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
+      - name: Read Terraform Outputs
+        id: read-output
+        run: |
+          RESOURCE_GROUP=$(terraform output -raw resource_group_name)
+          AKS_CLUSTER=$(terraform output -raw aks_cluster_name)
+          echo "RESOURCE_GROUP=${RESOURCE_GROUP}"
+          echo "AKS_CLUSTER=${AKS_CLUSTER}"
+          echo "RESOURCE_GROUP=${RESOURCE_GROUP}" >> $GITHUB_ENV
+          echo "AKS_CLUSTER=${AKS_CLUSTER}" >> $GITHUB_ENV
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+      - name: Install Kubectl
+        run: az aks install-cli
+
+      - name: Configure Kubectl
+        run: |
+          az login --service-principal \
+            --username "${{ secrets.ARM_CLIENT_ID }}" \
+            --password "${{ secrets.ARM_CLIENT_SECRET }}" \
+            --tenant "${{ secrets.ARM_TENANT_ID }}"
+
+          echo "Using RESOURCE_GROUP=${{ env.RESOURCE_GROUP }}"
+          echo "Using AKS_CLUSTER=${{ env.AKS_CLUSTER }}"
+
+          az aks get-credentials --overwrite-existing \
+            --name ${{ env.AKS_CLUSTER }} \
+            --resource-group ${{ env.RESOURCE_GROUP }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+      - name: Verify kubectl installation
+        run: kubectl version --client
+
+      - name: Deploy Sample Application
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
       # - name: Post Apply Output
       #   id: output
       #   run: terraform output -json > output.json
@@ -58,9 +103,9 @@ jobs:
       #     echo "::set-output name=RESOURCE_GROUP::$(jq -r '.resource_group_name.value' output.json)"
       #     echo "::set-output name=AKS_CLUSTER::$(jq -r '.aks_cluster_name.value' output.json)"
 
-      - name: Install Kubectl
-        run: |
-          az aks install-cli
+      # - name: Install Kubectl
+      #   run: |
+      #     az aks install-cli
 
       # - name: Configure Kubectl
       #   run: |
@@ -74,21 +119,21 @@ jobs:
       #       --resource-group rg-aks-final-10
 
 
-      - name: Configure Kubectl
-        run: |
-          az login --service-principal \
-            --username "${{ secrets.ARM_CLIENT_ID }}" \
-            --password "${{ secrets.ARM_CLIENT_SECRET }}" \
-            --tenant "${{ secrets.ARM_TENANT_ID }}"
+      # - name: Configure Kubectl
+      #   run: |
+      #     az login --service-principal \
+      #       --username "${{ secrets.ARM_CLIENT_ID }}" \
+      #       --password "${{ secrets.ARM_CLIENT_SECRET }}" \
+      #       --tenant "${{ secrets.ARM_TENANT_ID }}"
 
-          az aks get-credentials --overwrite-existing \
-            --name ${{ steps.read-output.outputs.AKS_CLUSTER }} \
-            --resource-group ${{ steps.read-output.outputs.RESOURCE_GROUP }}
+      #     az aks get-credentials --overwrite-existing \
+      #       --name ${{ steps.read-output.outputs.AKS_CLUSTER }} \
+      #       --resource-group ${{ steps.read-output.outputs.RESOURCE_GROUP }}
 
-      - name: Verify kubectl installation
-        run: kubectl version --client
+      # - name: Verify kubectl installation
+      #   run: kubectl version --client
 
-      - name: Deploy Sample Application
-        run: |
-          kubectl apply -f k8s/deployment.yml
-          kubectl apply -f k8s/service.yml
+      # - name: Deploy Sample Application
+      #   run: |
+      #     kubectl apply -f k8s/deployment.yml
+      #     kubectl apply -f k8s/service.yml
