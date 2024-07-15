@@ -34,7 +34,7 @@ jobs:
       - name: Build and Push Docker Image
         env:
           REGISTRY: ${{ secrets.ACR_NAME }}.azurecr.io
-          IMAGE_NAME: flask01
+          IMAGE_NAME: smaple-html-app
         run: |
           az acr login --name ${{ secrets.ACR_NAME }}
           docker build -t $REGISTRY/$IMAGE_NAME:latest .
