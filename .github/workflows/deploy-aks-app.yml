@@ -90,8 +90,8 @@ jobs:
         run: |
           kubectl create secret docker-registry my-secret --docker-server=${{ secrets.ACR_NAME }}.azurecr.io \
             --docker-username=${{ secrets.ACR_NAME }} \
-            --docker-password=${{ secrets.ACR_SECRET }}
-            --docker-email=satish@gmail.com
+            --docker-password=${{ secrets.ACR_SECRET }} \
+            --docker-email=doddasatish2@gmail.com
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
 
