@@ -3,7 +3,9 @@ name: Build and Push Docker Image to ACR
 on:
   push:
     branches:
-      - trigger
+      - main
+    paths: 
+      - index.html
 
 jobs:
   build-and-push:
