@@ -81,12 +81,17 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          
 
       - name: Verify kubectl installation
         run: kubectl version --client
 
       - name: Deploy Sample Application
         run: |
+          kubectl create secret docker-registry my-secret --docker-server=${{ secrets.ACR_NAME }}.azurecr.io \
+            --docker-username=${{ secrets.ACR_NAME }} \
+            --docker-password=${{ secrets.ACR_SECRET }}
+            --docker-email=satish@gmail.com
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
 
