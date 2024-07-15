@@ -47,7 +47,7 @@ jobs:
         id: read-output
         run: |
           RESOURCE_GROUP=$(terraform output -raw resource_group_name)
-          AKS_CLUSTER=$(terraform output -raw aks_cluster_name)
+          AKS_CLUSTER=$(terraform output -raw cluster_name)
           echo "RESOURCE_GROUP=${RESOURCE_GROUP}"
           echo "AKS_CLUSTER=${AKS_CLUSTER}"
           echo "RESOURCE_GROUP=${RESOURCE_GROUP}" >> $GITHUB_ENV
