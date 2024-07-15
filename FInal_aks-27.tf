@@ -12,7 +12,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-final-aks-27"
+  name     = "rg-final-aks-28"
   location = "East US"
   tags = {
     environment = "production"
@@ -20,10 +20,10 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "Final_aks-27"
+  name                = "Final_aks-28"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "finalaks27"
+  dns_prefix          = "finalaks28"
 
   default_node_pool {
     name       = "default"
