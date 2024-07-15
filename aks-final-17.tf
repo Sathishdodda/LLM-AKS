@@ -12,15 +12,15 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "aks-rg-final-17"
+  name     = "aks-rg-final-18"
   location = "East US"
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks-final-17"
+  name                = "aks-final-18"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "aksfinal17"
+  dns_prefix          = "aksfinal18"
 
   default_node_pool {
     name       = "default"
