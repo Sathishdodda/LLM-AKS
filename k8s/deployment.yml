@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: sample-html-app
-          image: mygenaicodeacr.azurecr.io/sample-html-app:v1
+          image: mygenaicodeacr.azurecr.io/smaple-html-app:v1
           ports:
             - containerPort: 80
       imagePullSecrets:
