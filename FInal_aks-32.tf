@@ -12,12 +12,12 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-final-aks-32"
+  name     = "rg-final-aks-33"
   location = "East US"
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "Final_aks-32"
+  name                = "Final_aks-33"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "finalaks32"
